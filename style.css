@@ -26,8 +26,8 @@ body {
 
 #form {
   background-color: #84b6f8;
-  min-height: 50vh;
-  min-width: 50vw;
+  height: 300px;
+  width: 500px;
   border: 1px solid transparent;
   border-radius: 10px;
   display: -webkit-box;
