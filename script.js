@@ -32,7 +32,7 @@ const processCountries = () => {
   // 1. kell egy ures tomb
   // 2. for cikl vegig kell menni countryArr-on és minden orsz name.official-jét bele kell rakni az ures tombbe
   // 3 returnolni ezt a tombot
-  // 10.45 ig  
+  // 10.45 ig  vissza
 }
 
 const anotherSelectFields = {
