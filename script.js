@@ -24,23 +24,50 @@ const selectElement = (type, name, label, selectOptions) => {
     `;
 };
 
-const processCountries = () => {
+/* const temp = fetch("https://restcountries.com/v3.1/all");
+console.log(temp);
+ */
+const processCountries = async () => {
   const countryRes = await fetch("https://restcountries.com/v3.1/all");
   const countryArr = await countryRes.json();
-  console.log(countryArr[0].name.official);
+  // console.log(countryArr[0].name.official);
 
   // 1. kell egy ures tomb
   // 2. for cikl vegig kell menni countryArr-on és minden orsz name.official-jét bele kell rakni az ures tombbe
   // 3 returnolni ezt a tombot
   // 10.45 ig  vissza
-}
 
-const anotherSelectFields = {
+  let allCountries = [];
+
+  for (const co of countryArr) {
+    let countryName = co.name.official;
+    allCountries.push(countryName);
+  }
+
+  console.log(allCountries);
+
+  return allCountries;
+};
+
+const temp = processCountries();
+console.log(temp);
+
+/* const anotherSelectFields = {
   type: "select",
   name: "countries",
   label: "Ország",
   // options: ["Canada", "Jamaica", "Hungary"],
   options: processCountries(),
+};
+ */
+
+const anotherSelectFields = async () => {
+  return {
+    type: "select",
+    name: "countries",
+    label: "Ország",
+    options: await processCountries()
+  };
 };
 
 const selectFields = {
@@ -72,7 +99,6 @@ const anotherFormFields = [
     label: "Település neve",
   },
 ];
-
 
 const formFields = [
   {
@@ -171,7 +197,8 @@ const inputEvent = (event) => {
   }
 };
 
-function loadEvent() {
+async function loadEvent() {
+  const waitAnotherSelectFields = await anotherSelectFields()
   let root = document.getElementById("root");
   root.insertAdjacentHTML(
     "beforeend",
@@ -179,7 +206,7 @@ function loadEvent() {
   );
   root.insertAdjacentHTML(
     "beforeend",
-    formElement(anotherFormFields, "form2", anotherSelectFields)
+    formElement(anotherFormFields, "form2", waitAnotherSelectFields)
   );
   root.insertAdjacentHTML(
     "beforeend",
@@ -198,3 +225,13 @@ function loadEvent() {
 }
 
 window.addEventListener("load", loadEvent);
+
+/* 
+? Promise ?
+1. letölteni az adatot
+2. lépés a sémám szerint rendezem (példányosítom a sémámat)
+Richárd Atom11:36
+3. a sémából készült objektum példányomat átadom a megjelenítését felelő függvénynek
+4. a megjelenítésért felelő függvény HTML-tre formázza a séma alapján elkészült objektumomat
+5. beillesztem a index.html-be
+ */
