@@ -24,28 +24,55 @@ const selectElement = (type, name, label, selectOptions) => {
     `;
 };
 
+const processCountries = () => {
+  const countryRes = await fetch("https://restcountries.com/v3.1/all");
+  const countryArr = await countryRes.json();
+  console.log(countryArr[0].name.official);
+
+  // 1. kell egy ures tomb
+  // 2. for cikl vegig kell menni countryArr-on és minden orsz name.official-jét bele kell rakni az ures tombbe
+  // 3 returnolni ezt a tombot
+  // 10.45 ig  
+}
+
+const anotherSelectFields = {
+  type: "select",
+  name: "countries",
+  label: "Ország",
+  // options: ["Canada", "Jamaica", "Hungary"],
+  options: processCountries(),
+};
+
+const selectFields = {
+  type: "select",
+  name: "where",
+  label: "Hol hallottál rólunk?",
+  options: ["internetről", "ismerőstől", "egyéb"],
+};
+
 const anotherFormFields = [
   {
     type: "text",
     name: "street",
-    label: "Közterület neve"
+    label: "Közterület neve",
   },
   {
     type: "text",
     name: "houseNumber",
-    label: "Házszám"
+    label: "Házszám",
   },
   {
     type: "number",
     name: "zipCode",
-    label: "Irányítószám"
+    label: "Irányítószám",
   },
   {
     type: "text",
     name: "city",
-    label: "Település neve"
+    label: "Település neve",
   },
-]
+];
+
 
 const formFields = [
   {
@@ -74,7 +101,7 @@ const formFields = [
     type: "checkbox",
     name: "terms",
     label: "Elfogadod a feltételeket?",
-    required: "required"
+    required: "required",
   },
 ];
 
@@ -96,7 +123,7 @@ const formFields = [
 `;
  */
 
-const formElement = (ffs, id) => {
+const formElement = (ffs, id, sel) => {
   let toForm = "";
   for (const ff of ffs) {
     toForm += inputElement(ff.type, ff.name, ff.label, ff.required);
@@ -104,12 +131,8 @@ const formElement = (ffs, id) => {
   return `
   <form id="${id}">
       ${toForm}
-      ${selectElement("select", "where", "Hol hallottál rólunk?", [
-        "internetről",
-        "ismerőstől",
-        "egyéb",
-      ])}
-        <button>OK</button>
+      ${selectElement(sel.type, sel.name, sel.label, sel.options)}
+      <button>OK</button>
     </form>
   `;
 };
@@ -128,7 +151,7 @@ const formSubmit = (event) => {
 const inputEvent = (event) => {
   let tryForm = event.target.closest("#form");
   console.log(event.target.value);
-  
+
   // console.log(tryForm);
 
   /*   if (event.target.getAttribute("name") === "firstName") {
@@ -139,16 +162,25 @@ const inputEvent = (event) => {
   if (event.target.getAttribute("name") === "profilePic") {
     console.log(event.target.files[0].name);
 
-    const image = URL.createObjectURL(event.target.files[0])
-    document.getElementById("inputValueContent").insertAdjacentHTML('beforeend', `
-    <img src="${image}">`)
+    const image = URL.createObjectURL(event.target.files[0]);
+    document.getElementById("inputValueContent").insertAdjacentHTML(
+      "beforeend",
+      `
+    <img src="${image}">`
+    );
   }
 };
 
 function loadEvent() {
   let root = document.getElementById("root");
-  root.insertAdjacentHTML("beforeend", formElement(formFields, "form"));
-  root.insertAdjacentHTML("beforeend", formElement(anotherFormFields, "form2"));
+  root.insertAdjacentHTML(
+    "beforeend",
+    formElement(formFields, "form", selectFields)
+  );
+  root.insertAdjacentHTML(
+    "beforeend",
+    formElement(anotherFormFields, "form2", anotherSelectFields)
+  );
   root.insertAdjacentHTML(
     "beforeend",
     `
